@@ -10,7 +10,7 @@
 - [ ] Meet AsyncSequence
 - [ ] Use async/await with URLSession
 - [x] What's new in SwiftUI
-- [ ] Demystify SwiftUI
+- [x] Demystify SwiftUI
 - [ ] Add rich graphics to your SwiftUI app
 - [ ] Direct and reflect focus in SwiftUI
 - [ ] Discover concurrency in SwiftUI
@@ -576,6 +576,170 @@ Menu("Add") {
 - new `Toggle` style to look like a button: `.toggleStyle(.button)`
     - looks like a button but behaves like a toggle
 - `ControlGroup` to group buttons and toggles
+
+## Demystify SwiftUI
+
+[Recording](https://wwdc.io/share/wwdc21/10022)
+
+> Peek behind the curtain into the core tenets of SwiftUI philosophy: Identity, Lifetime, and Dependencies.
+> Find out about common patterns, learn the principles that drive the framework, and discover how you can use them to guarantee correctness and performance for your app.
+
+### Overview
+
+- SwiftUI looks for the following 3 things in code:
+  1. *Identity*: elements as the same or distinct across multiple updates of the app
+  2. *Lifetime*: tracking existence of views and data over time
+  3. *Dependencies*: how SwiftUI knows when to update and why
+
+### Identity
+
+- given 2 views, are they completely different or are they the same view in a different state
+    - how SwiftUI knows how to transition between views
+- types of identity:
+    1. *explicit*: custom or data driven identifiers
+        - e.g. having two dogs with different names
+        - e.g. the `id` parameter in `ForEach()`
+        - e.g. the `.id()` modifier on a SwiftUI view
+    2. *structural*: distinguishing views by their type and position in view hierarchy
+        - structure of the view hierarchy to create implicit identifiers
+        - e.g. if have two dogs next to each other, can refer to them as "the one on the left" or "right"
+- example of structural identity causing different bahviour in SwiftUI
+
+```swift
+// Causes the green and red `PawViews` to fade in or out depending on `dog.isGood`.
+VStack {
+    if dog.isGood {
+        PawView(tint: .green)
+        Spacer()
+    } else {
+        Spacer()
+        PanViiw(tint: .red)
+    }
+}
+
+// Causes color to change and `PawView` to move depending on `dog.isGood`.
+PawView(tint: dog.isGood ? .green : .red)
+    .frame(
+        maxHeight: .infinity,
+        alignment: dog.isGood ? .top : .bottom
+    )
+```
+
+- nemesis of Identity in SwiftUI: `AnyView`
+    - "type-erasing wrapper type"
+    - avoid at all costs!
+
+### Lifetime
+
+- different *values* for a single *element* over time
+    - a view's values are *not* the same as the view's identity
+    - the value changes, but SwiftUI sees it as the same element
+- `@State` and `@StateObject` tell SwiftUI that it will need to keep those elements for the view's lifetime
+    - identity of the data can be used as the identity of the view by SwiftUI
+
+### Dependencies
+
+- a dependency is just an input to a view (the view's properties)
+    - when a dependency changes, the view must produce a new `body`
+- SwiftUI builds a dependency graph so it can tell what needs to be updated when a dependency changes
+    - the identities of the views are used to locate an element even as the values change
+
+### Identifier stability
+
+- the stability of the identity of an element determines its lifetime
+- directly affects performance
+    - needlessly changing identity can result in "dependency churn"
+- example of an unstable identifier
+    - the ID changes every time any of the data changes
+    - adding a new element to `pets` causes all of the data to change because each element will have a different value for `id`
+
+```swift
+enum Animal { case dog, cat }
+
+struct Pet: Identifiable {
+    var name: String
+    var kind: Animal
+    var id: UUID { UUID() }  // unstable ID
+}
+
+struct FavoritePets: View {
+    var pets: [Pet]
+    var body: some View {
+        List {
+            ForEach(pets) {
+                PetView($0)
+            }
+        }
+    }
+}
+```
+
+- another example where the identity of the elements in `pets` is tied to its index
+    - inserting a new pet at index 0, would actually cause a new element to appear at the bottom
+    - the identity of each pet would increment, causing SwiftUI to think they are all new
+
+```swift
+struct FavoritePets: View {
+    var pets: [Pet]
+    var body: some View {
+        List {
+            ForEach(pets.indices, id: \.self) {  // unstable ID
+                PetView(pets[$0])
+            }
+        }
+    }
+}
+```
+
+### Identifier uniqueness
+
+- improves animations, performance, and accuracy of SwiftUI's dependency graph
+- example with a bug where identifiers would not be unique
+    - cannot have a `Treat` in `treats` with the same `.name`
+
+```swift
+struct TreatJar: View {
+    var treats: [Treat]
+    var body: some View {
+        ScrollView {
+            LazyVGrid(...) {
+                ForEach(treats, id: \.name) {  // non-unique ID
+                    TreatCell($0)
+                }
+            }
+        }
+    }
+}
+```
+
+### Structural identity
+
+- below is an example with a bug where an element can accidentally have a different structural identity
+    - fix by moving conditional into the opacity modifier: `.opacity(date < .now ? 0.3 : 1.0)`
+
+```swift
+ForEach(treats, id: \.serialNumber) {  // good unique ID
+    TreatCell($0)
+    .modifier(ExpirationModifier(date: treat.expiryDate))
+}
+
+struct ExpirationModifier: ViewModifier {
+    var date: Date
+    func body(content: Content) -> some View {
+        if date < .now { // branch causes different structural ID based on `date`
+            content.opacity(0.3)
+        } else {
+            content
+        }
+    }
+}
+```
+
+- `.opacity(1.0)` is an "Inert modifier" that is actually removed by SwiftUI before rendering
+    - some examples of inert modifiers that should be used instead of conditional branches like the above example
+        1. `opacity(1.0)`
+        2. `padding(0)`
+        3. `transformEnvironment(...) {}`: conditional writing to the environment
 
 ## What’s new in SF Symbols
 
