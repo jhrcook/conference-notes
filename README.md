@@ -18,7 +18,6 @@ Notes from various technical and scientific conferences I have attended.
 
 ## Scientific
 
-
 ---
 
 [![jhc github](https://img.shields.io/badge/GitHub-jhrcook-181717.svg?style=flat&logo=github)](https://github.com/jhrcook)
