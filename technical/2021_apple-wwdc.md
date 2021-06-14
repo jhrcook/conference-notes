@@ -3,7 +3,12 @@
 ### Watch List
 
 - [x] What‘s new in Swift
+- [ ] What's new in Foundation
+- [ ] What's new in watchOS 8
+- [ ] ARC in Swift: Basics and beyond
 - [x] Meet DocC documentation in Xcode
+- [ ] Build interactive tutorials using DocC
+- [ ] Host and automate your DocC documentation
 - [x] Meet async/await in Swift
 - [ ] Protect mutable state with Swift actors
 - [ ] Explore structured concurrency in Swift
@@ -12,13 +17,33 @@
 - [x] What's new in SwiftUI
 - [x] Demystify SwiftUI
 - [ ] Add rich graphics to your SwiftUI app
-- [ ] Direct and reflect focus in SwiftUI
+- [x] Direct and reflect focus in SwiftUI
 - [ ] Discover concurrency in SwiftUI
+- [ ] SwiftUI on the Mac: Build the fundamentals
+- [ ] SwiftUI on the Mac: The finishing touches
 - [ ] Swift concurrency: Update a sample app
+- [ ] Swift concurrency: Behind the scenes
 - [ ] Use the camera for keyboard input in your app
 - [ ] Ultimate application performance survival guide
 - [ ] Meet the Screen Time API
 - [x] What’s new in SF Symbols
+- [ ] SF Symbols in SwiftUI
+- [ ] Discover built-in sound classification in SoundAnalysis
+- [ ] Bring Core Data concurrency to Swift and SwiftUI
+- [ ] Build a workout app for Apple Watch
+- [ ] Build dynamic iOS apps with the Create ML framework
+- [ ] Classify hand poses and actions with Create ML
+- [ ] Craft search experiences in SwiftUI
+- [ ] Detect people, faces, and poses using Vision
+- [ ] Extract document data using Vision
+- [ ] Tune your Core ML models
+- [ ] Use async/await with URLSession
+- [ ] Detect and diagnose memory issues
+- [ ] Detect bugs early with the static analyzer
+- [ ] Diagnose Power and Performance regressions in your app
+- [ ] Diagnose unreliable code with test repetitions
+- [ ] Meet the Swift Algorithms and Collections packages
+- [ ] Ultimate application performance survival guide
 
 ---
 
@@ -781,3 +806,63 @@ struct ExpirationModifier: ViewModifier {
     - can play with the different render modes and different colors
     - additional color palettes: "Light" and "Dark" (already existent), and "Light increased contrast" and "Dark increased contrast"
         - available on all platforms, but some may be tweaked for specific platforms
+
+## Direct and reflect focus in SwiftUI
+
+[Recording](https://wwdc.io/share/wwdc21/10023)
+
+> With device input — as with all things in life — where you put focus matters.
+> Discover how you can move focus in your app with SwiftUI, programmatically dismiss the keyboard, and build large navigation targets from small views.
+> Together, these APIs can help you simplify your app’s interface and make it more powerful for people to find what they need.
+
+- generally, SwiftUI handles focus automatically
+    - new APIs allow for us to control focus
+- control focus using the `@FocusState` property wrapper
+    - state changes depending on state of focus
+    - is an Enum that has to be hashable and optional
+    - then use `.focused()` modifier to link the focus state to views
+    - set `focusedField` to `nil` to not have anything in focus
+        - automatically dismisses keyboard if it was available
+
+```swift
+enum Field: Hashable { case email, password }
+
+struct ContentView: View {
+    @FocusState private var focusedField: Field?
+    var body: some View {
+        VStack {
+            TextField("Email", text: $email)
+                .focused($focusedField, equals: .email)
+            SecureField("Password", text: $password)
+                .focused($focusedField, equals: .password)
+        }
+        .onSubmit {
+            if !isEmailValid {
+                focusedField = .email  // Move focus to the email input field.
+            } else {
+                focusedField = nil
+            }
+        }
+    }
+}
+```
+
+- can create focusable navigation targets, too
+    - add the `.focusSection()` modifier to any view that contains a focusable view (e.g. button, text field)
+
+```swift
+HStack {
+    VStack {
+        TextField("Email", text: $email)
+        SecureField("Password", text: $password)
+        SignInWithAppleButton(...)
+    }
+    .focusSection()  // Required in order to navigate focus back from the other VStack.
+    .onSubmit { ... }
+    VStack {
+        Image(photoName)
+        BrowsePhotosButton()
+    }
+    .focusSection() // Allows this entire VStack to be focusable.
+}
+```
