@@ -807,6 +807,114 @@ struct ExpirationModifier: ViewModifier {
     - additional color palettes: "Light" and "Dark" (already existent), and "Light increased contrast" and "Dark increased contrast"
         - available on all platforms, but some may be tweaked for specific platforms
 
+## SF Symbols in SwiftUI
+
+[Recording](https://wwdc.io/share/wwdc21/10349)
+
+> Discover how you can incorporate SF Symbols into your SwiftUI app.
+> We’ll explore basic techniques for presenting symbols, customizing their size, and showing different variants.
+> We’ll also take you through the latest updates to symbol colorization and help you pick the right tool for your app’s needs.
+
+```swift
+// Basic use
+Image(systemName: "heart")
+Label("Heart", systemImage: "heart")
+```
+
+```swift
+// Add Accessibility label for voice over.
+Image(systemName: "person.circle").accessibilityLabel("Profile")
+```
+
+- can use SFSymbol in string interpolation
+
+```swift
+Text("""
+    Thalia, Paul, and
+    3 others \(Image(systemName: "chevron"))
+""")
+```
+
+- coloration
+
+```swift
+.foregroundStyle(.red)        // color red
+.foregroundStyle(.tint)       // default app tint color
+.foregroundStyle(.secondary)  // secondary color determined by system
+```
+
+- font modifier to control style and size
+    - use a font style will let the image scale using dynamic type
+
+```swift
+.font(.body)
+.font(.caption)
+.font(.system(size: 10))
+```
+
+- change size relative to the font size of the text
+    - does not change the size of the text
+
+```swift
+.imageScale(.large)  // or `.medium`, `.small`
+```
+
+- variants (such as ".fill" symbols)
+    - now automatically applied by the system depending on the context
+    - e.g. SwiftUI will automatically use the filled version for tab bars in iOS
+    - can also apply different variants using a SwiftUI modifier: `.symbolVariant()`
+        - can use with custom symbols, too, as long as the variants follow the same naming conventions as SwiftUI
+
+```swift
+List {
+    Label("Ace of Hearts", systemImage: "suit.heart")
+    Label("Ace of Spades", systemImage: "suit.spade")
+}
+.symbolVariant(.circle.fill)
+```
+
+- rendering modes: *Monochrome*, *Multicolor*, *Hierarchical*, *Palette*
+    - details on each mode in WWDC session: *What's New in SF Symbols*
+    - control with modifier: `symbolRenderingMode()`
+    - can see which rendering modes a symbol supports in the SF Symbols App
+
+```swift
+List {
+    Label("Ace of Hearts", systemImage: "suit.heart")  // red
+    Label("Ace of Spades", systemImage: "suit.spade")  // black
+}
+.symbolVariant(.fill)
+.symbolRenderingMode(.multicolor)
+```
+
+```swift
+HStack {
+    Button(action: moveToTop) {
+        Image(systemName: "square.3.stack.3d.top.fill")
+    }
+    Button(action: moveToBottom) {
+        Image(systemName: "square.3.stack.3d.bottom.fill")
+    }
+}
+.symbolRenderingMode(.hierarchical)  // different opacities to parts of symbols
+```
+
+- can provide specific colors for the multicolor mode
+    - which layers a symbol has depends on the specific variant (e.g. `.circle` vs. `.fill`)
+    - can provide one color for each level, or just two for Primary and all the rest
+    - can also provide different *styles* instead of just a color (see commented out example)
+        - WWDC session: *Add rich graphics to your SwiftUI app*
+
+```swift
+Button(action: undo) {
+    Image(systemName: "arrow.uturn.backward")
+}
+.symbolVariant(.circle.fill)
+.foregroundStyle(.white, .yellow, .red)  // primary, secondary, tertiary
+// .foregroundStyle(.red, .secondary)
+// .foregroundStyle(.red, .regularMaterial)
+```
+
 ## Direct and reflect focus in SwiftUI
 
 [Recording](https://wwdc.io/share/wwdc21/10023)
