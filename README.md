@@ -10,11 +10,11 @@ Notes from various technical and scientific conferences I have attended.
 
 ### Python
 
-1. PyCon 2021 (in progress in a Collab notebook)
+1. [PyCon 2021](technical/pycon2021_notes.md)([Jupyter notebook](technical/pycon2021_notes.ipynb)) *in progress*
 
 ### Swift
 
-1. [Apple WWDC 2021](technical/2021_apple-wwdc.md)
+1. [Apple WWDC 2021](technical/2021_apple-wwdc.md) *in progress*
 
 ## Scientific
 
