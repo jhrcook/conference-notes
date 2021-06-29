@@ -27,13 +27,13 @@
 - [ ] Ultimate application performance survival guide
 - [ ] Meet the Screen Time API
 - [x] What’s new in SF Symbols
-- [ ] SF Symbols in SwiftUI
+- [x] SF Symbols in SwiftUI
 - [ ] Discover built-in sound classification in SoundAnalysis
 - [ ] Bring Core Data concurrency to Swift and SwiftUI
 - [ ] Build a workout app for Apple Watch
 - [ ] Build dynamic iOS apps with the Create ML framework
 - [ ] Classify hand poses and actions with Create ML
-- [ ] Craft search experiences in SwiftUI
+- [x] Craft search experiences in SwiftUI
 - [ ] Detect people, faces, and poses using Vision
 - [ ] Extract document data using Vision
 - [ ] Tune your Core ML models
@@ -972,5 +972,69 @@ HStack {
         BrowsePhotosButton()
     }
     .focusSection() // Allows this entire VStack to be focusable.
+}
+```
+
+## Craft search experiences in SwiftUI
+
+[Recording](https://wwdc.io/share/wwdc21/10176)
+
+> Discover how you can help people quickly find specific content within your apps.
+> Learn how to use SwiftUI’s `.searchable` modifier in conjunction with other views to best incorporate search for your app.
+> And we’ll show you how to elevate your implementation by providing search suggestions to help people understand the types of searches they can perform.
+
+- can add a search bar to a view using the `.searchable` modifier
+    - below is a basic example of adding a search bar to a `NavigationView`
+
+```swift
+NavigationView {
+    WeatherList(text: $text) {
+        ForEach(data) { item in
+            WeatherCell(item)
+        }
+    }
+}
+.searchable(text: $text)
+```
+
+- for this example weather app, the view changes when a search is in progress
+    - can adapt to this dynamically using the `.isSearching` environment variable
+
+```swift
+// inside `WeatherList`
+
+@Binding var text: String
+
+@Environment(\.isSearching) private var isSearching: Bool
+
+var body: some View {
+    WeatherCitiesList()
+        .overlay {
+            if isSearching && !text.isEmpty {
+                WeatherSearchResults()
+            }
+        }
+}
+```
+
+- can add suggestions for the search bar as a trailing closure to `.searchable`
+    - use the `onSubmit` modifier for when to commit the search results
+
+```swift
+NavigationView {
+    Sidebar()
+    DetailView()
+}
+.searchable(text: $text) {
+    ForEach(suggestions) { suggestion in
+        Button {
+            text = suggestion.text
+        } label: {
+            ColorsSuggestionLabel(suggestion)
+        }
+    }
+}
+.onSubmit(of: .search) {
+    fetchSearchResults()
 }
 ```
