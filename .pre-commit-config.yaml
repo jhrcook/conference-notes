@@ -10,3 +10,12 @@ repos:
     -   id: check-yaml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
+-   repo: https://github.com/nbQA-dev/nbQA
+    rev: 0.13.1
+    hooks:
+    -   id: nbqa-isort
+        args: [--nbqa-mutate, --line-length=100, --profile=black]
+    -   id: nbqa-black
+        args: [--nbqa-mutate]
+    -   id: nbqa-pyupgrade
+        args: [--nbqa-mutate]

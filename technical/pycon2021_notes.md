@@ -151,7 +151,7 @@ from hypothesis import strategies as st
 
 @given(
     st.floats(allow_infinity=False, allow_nan=False),
-    st.floats(allow_infinity=False, allow_nan=False)
+    st.floats(allow_infinity=False, allow_nan=False),
 )
 def test_given_floats_add_is_commutative(x: float, y: float):
     assert x + y == y + x
@@ -160,8 +160,8 @@ def test_given_floats_add_is_commutative(x: float, y: float):
 - there is built-in support for data science libraries (e.g. numpy, pandas)
 
 ```python
-from hypothesis.extra.numpy import arrays, array_shapes
 import numpy as np
+from hypothesis.extra.numpy import array_shapes, arrays
 
 
 @given(
@@ -428,6 +428,7 @@ max(5, 8)
 
 ```python
 from fractions import Fraction
+
 max(Fraction(5, 8), Fraction(7, 12))
 ```
 
@@ -589,16 +590,21 @@ from pandera import typing as pat
 
 PROPERTY_TYPES = ["condo", "townhouse", "house"]
 
+
 class BaseSchema(pa.SchemaModel):
-    square_footage: pat.Series[int] = pa.Field(in_range={"min_value": 0, "max_value": 3000})
+    square_footage: pat.Series[int] = pa.Field(
+        in_range={"min_value": 0, "max_value": 3000}
+    )
     n_bedrooms: pat.Series[int] = pa.Field(in_range={"min_value": 0, "max_value": 10})
     prive: pat.Series[int] = pa.Field(in_range={"min_value": 0, "max_value": 1000000})
 
     class Config:
         coerce = True
 
+
 class RawData(BaseSchema):
     property_type: pat.Series[str] = pa.Field(isin=PROPERTY_TYPES)
+
 
 class ProcessedData(BaseSchema):
     property_type_condo: pat.Series[int] = pa.Field(isin=[0, 1])
@@ -608,9 +614,11 @@ class ProcessedData(BaseSchema):
 
 # Validate input and output types of functions.
 
+
 @pa.check_types
 def process_data(raw_data: pat.DataFrame[RawData]) -> pat.DataFrame[ProcessedData]:
     ...
+
 
 @pa.check_types
 def train_model(processed_data: pat.DataFrame[ProcessedData]):
