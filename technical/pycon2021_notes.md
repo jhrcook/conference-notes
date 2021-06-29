@@ -1,3 +1,30 @@
+```python
+!pip install pandera hypothesis black
+```
+
+    Requirement already satisfied: pandera in /usr/local/lib/python3.7/dist-packages (0.6.4)
+    Requirement already satisfied: hypothesis in /usr/local/lib/python3.7/dist-packages (6.14.0)
+    Requirement already satisfied: black in /usr/local/lib/python3.7/dist-packages (21.6b0)
+    Requirement already satisfied: wrapt in /usr/local/lib/python3.7/dist-packages (from pandera) (1.12.1)
+    Requirement already satisfied: typing-inspect>=0.6.0 in /usr/local/lib/python3.7/dist-packages (from pandera) (0.7.1)
+    Requirement already satisfied: numpy>=1.9.0 in /usr/local/lib/python3.7/dist-packages (from pandera) (1.19.5)
+    Requirement already satisfied: typing-extensions>=3.7.4.3; python_version < "3.8" in /usr/local/lib/python3.7/dist-packages (from pandera) (3.7.4.3)
+    Requirement already satisfied: pandas>=0.25.3 in /usr/local/lib/python3.7/dist-packages (from pandera) (1.1.5)
+    Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.7/dist-packages (from pandera) (20.9)
+    Requirement already satisfied: attrs>=19.2.0 in /usr/local/lib/python3.7/dist-packages (from hypothesis) (21.2.0)
+    Requirement already satisfied: sortedcontainers<3.0.0,>=2.1.0 in /usr/local/lib/python3.7/dist-packages (from hypothesis) (2.4.0)
+    Requirement already satisfied: appdirs in /usr/local/lib/python3.7/dist-packages (from black) (1.4.4)
+    Requirement already satisfied: typed-ast>=1.4.2; python_version < "3.8" in /usr/local/lib/python3.7/dist-packages (from black) (1.4.3)
+    Requirement already satisfied: regex>=2020.1.8 in /usr/local/lib/python3.7/dist-packages (from black) (2021.4.4)
+    Requirement already satisfied: pathspec<1,>=0.8.1 in /usr/local/lib/python3.7/dist-packages (from black) (0.8.1)
+    Requirement already satisfied: mypy-extensions>=0.4.3 in /usr/local/lib/python3.7/dist-packages (from black) (0.4.3)
+    Requirement already satisfied: toml>=0.10.1 in /usr/local/lib/python3.7/dist-packages (from black) (0.10.2)
+    Requirement already satisfied: click>=7.1.2 in /usr/local/lib/python3.7/dist-packages (from black) (7.1.2)
+    Requirement already satisfied: python-dateutil>=2.7.3 in /usr/local/lib/python3.7/dist-packages (from pandas>=0.25.3->pandera) (2.8.1)
+    Requirement already satisfied: pytz>=2017.2 in /usr/local/lib/python3.7/dist-packages (from pandas>=0.25.3->pandera) (2018.9)
+    Requirement already satisfied: pyparsing>=2.0.2 in /usr/local/lib/python3.7/dist-packages (from packaging>=20.0->pandera) (2.4.7)
+    Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.7/dist-packages (from python-dateutil>=2.7.3->pandas>=0.25.3->pandera) (1.15.0)
+
 # PyCon 2021 Notes
 
 [Website](https://us.pycon.org/2021/) | [Talks Schedule](https://us.pycon.org/2021/schedule/talks/) | [YouTube page](https://www.youtube.com/c/PyConUS/videos) | [PyCon 2021 Playlist](https://www.youtube.com/watch?v=z_hm5oX7ZlE&list=PL2Uw4_HvXqvYk1Y5P8kryoyd83L_0Uk5K)
@@ -116,18 +143,6 @@ I do not currently use Azure tools, but this was a good example of the some of t
 - overview of ['hypothesis'](https://hypothesis.readthedocs.io):
     - key object is a "strategy": a recipe for generating data
     - there are some predefined strategies and custom ones can be written, too
-
-```python
-!pip install hypothesis
-```
-
-    Collecting hypothesis
-    [?25l  Downloading https://files.pythonhosted.org/packages/f5/55/85643230bb1f805495d41668f5c2b9d219c5cd6a556360985adc22fa6011/hypothesis-6.13.14-py3-none-any.whl (367kB)
-    [K     |████████████████████████████████| 368kB 3.9MB/s
-    [?25hRequirement already satisfied: sortedcontainers<3.0.0,>=2.1.0 in /usr/local/lib/python3.7/dist-packages (from hypothesis) (2.4.0)
-    Requirement already satisfied: attrs>=19.2.0 in /usr/local/lib/python3.7/dist-packages (from hypothesis) (21.2.0)
-    Installing collected packages: hypothesis
-    Successfully installed hypothesis-6.13.14
 
 ```python
 from hypothesis import given
@@ -543,4 +558,180 @@ def mymax(a: LessT, b: LessT) -> LessT:
     if b < a:
         return a
     return b
+```
+
+## Statistical Typing: A Runtime Typing System for Data Science and Machine Learning
+
+⭐⭐⭐⭐
+
+**Niels Bantilan** ([recording](https://youtu.be/PI5UmKi14cM))
+
+> Data science and machine learning rely on high quality datasets for visualization, statistical inference, and modeling.
+> However, the barriers to testing data processing, analysis, or model-training code are high, even with the extensive tooling that the python ecosystem offers, such as pandas, pytest, and hypothesis.
+>
+> To address this problem, in this talk I define statistical typing as a general concept describing a runtime typing system, which extends primitive data types like bool, str, and float into the class of statistical data types.
+> By providing additional semantics about the properties held by a collection of data points, statistical typing enables us to naturally express types as multivariate schemas.
+> It also enables us to implement schemas as generative data contracts, which serve to both validate data at runtime and generate valid samples for testing purposes.
+>
+> I'll use ['pandera'](https://pandera.readthedocs.io/en/stable/), a pandas data testing library, to illustrate how statistical typing makes data testing easier by enabling you to validate real-world data with reusable schemas and isolate units of processing, analysis, and model-training code.
+
+- statistical type specifications using schemas
+    - need to include:
+        1. **primitive datatype**: `int`, `float`, `bool`, ...
+        2. **deterministic properties**: e.g. domain of possible values such as `x >= 0`
+        3. **probabilistic properties**: values to describe the distribution of values (e.g. mean, s.d.)
+- ['pandera'](https://pandera.readthedocs.io/en/stable/): library for statistical typing
+    - below is an example of validating a data frame of housing prices
+
+```python
+import pandera as pa
+from pandera import typing as pat
+
+PROPERTY_TYPES = ["condo", "townhouse", "house"]
+
+class BaseSchema(pa.SchemaModel):
+    square_footage: pat.Series[int] = pa.Field(in_range={"min_value": 0, "max_value": 3000})
+    n_bedrooms: pat.Series[int] = pa.Field(in_range={"min_value": 0, "max_value": 10})
+    prive: pat.Series[int] = pa.Field(in_range={"min_value": 0, "max_value": 1000000})
+
+    class Config:
+        coerce = True
+
+class RawData(BaseSchema):
+    property_type: pat.Series[str] = pa.Field(isin=PROPERTY_TYPES)
+
+class ProcessedData(BaseSchema):
+    property_type_condo: pat.Series[int] = pa.Field(isin=[0, 1])
+    property_type_townhouse: pat.Series[int] = pa.Field(isin=[0, 1])
+    property_type_house: pat.Series[int] = pa.Field(isin=[0, 1])
+
+
+# Validate input and output types of functions.
+
+@pa.check_types
+def process_data(raw_data: pat.DataFrame[RawData]) -> pat.DataFrame[ProcessedData]:
+    ...
+
+@pa.check_types
+def train_model(processed_data: pat.DataFrame[ProcessedData]):
+    ...
+```
+
+- can bootstrap a schema from an existing data frame
+    - exports as a YAML file or Python script
+
+```python
+import seaborn as sns
+
+iris = sns.load_dataset("iris")[["sepal_length", "species"]]
+iris.head()
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+```python
+schema = pa.infer_schema(iris)
+print(schema.to_script())  # or `schema.to_yaml()`
+```
+
+    from pandera import (
+        DataFrameSchema,
+        Column,
+        Check,
+        Index,
+        MultiIndex,
+        PandasDtype,
+    )
+
+    schema = DataFrameSchema(
+        columns={
+            "sepal_length": Column(
+                pandas_dtype=PandasDtype.Float64,
+                checks=[
+                    Check.greater_than_or_equal_to(min_value=4.3),
+                    Check.less_than_or_equal_to(max_value=7.9),
+                ],
+                nullable=False,
+                allow_duplicates=True,
+                coerce=False,
+                required=True,
+                regex=False,
+            ),
+            "species": Column(
+                pandas_dtype=PandasDtype.String,
+                checks=None,
+                nullable=False,
+                allow_duplicates=True,
+                coerce=False,
+                required=True,
+                regex=False,
+            ),
+        },
+        index=Index(
+            pandas_dtype=PandasDtype.Int64,
+            checks=[
+                Check.greater_than_or_equal_to(min_value=0.0),
+                Check.less_than_or_equal_to(max_value=149.0),
+            ],
+            nullable=False,
+            coerce=False,
+            name=None,
+        ),
+        coerce=True,
+        strict=False,
+        name=None,
+    )
+
+```python
+
 ```
