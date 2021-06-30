@@ -46,9 +46,9 @@
 - [ ] Getting an Edge with Network Analysis with Python
 - [ ] Python Performance at Scale - Making Python Faster at Instagram
 - [ ] No, Maybe and Close Enough: Using Probabilistic Data Structures in Python
-- [ ] The magic of "self": How Python inserts "self" into methods
+- [x] The magic of "self": How Python inserts "self" into methods
 - [ ] What are quantum computers, and how can we train them in Python?
-- [ ] Statistical Typing: A Runtime Typing System for Data Science and Machine Learning
+- [x] Statistical Typing: A Runtime Typing System for Data Science and Machine Learning
 - [ ] Unexpected Execution: Wild Ways Code Execution can Occur in Python
 - [ ] Large Scale Data Validation (with Spark and Dask)
 
@@ -739,6 +739,144 @@ print(schema.to_script())  # or `schema.to_yaml()`
         strict=False,
         name=None,
     )
+
+## The magic of "self": How Python inserts "self" into methods
+
+⭐⭐⭐⭐
+
+**Sebastiaan Zeeff** ([recording](https://youtu.be/ANLjBsWHshc))
+
+> A phrase that I hear a lot is "Python is easy to learn, but hard to master".
+> In a way that's true: Python is easy to learn because its high level of abstraction allows you to focus on the business logic of what you're trying to do instead of the lower-level implementation details.
+>
+> At the same time, Python's abstraction isn't magical: Its versatile data model allows you to hook into almost every part of the language to implement objects that behave just as Python's built-in objects do, enabling you to create similarly high-leveled interfaces for your own objects.
+> That's where "hard to master" comes in: There is so much to learn that you're never done learning.
+>
+> In this talk, I want to entice you to look beyond Python's high-level interface into the wonderful landscape of its data model.
+> I'll do that by explaining one of Python's most "magical" features: The automatic insertion of self into methods. Often, to beginners, the insertion of the instance as the first argument to methods is explained as something that Python just does for you: "Don't worry about it, it just happens!".
+> More intermediate Python programmers typically get so used to self that they hardly notice it anymore in their function signatures, let alone wonder about what's powering it.
+>
+> To explain this bit of Python magic, I’ll give you an informal introduction to something called descriptors.
+> To be sure, this talk isn’t going to be an in-depth discussion of the finer details of the descriptor protocol.
+> Rather, it’s aimed at advanced beginners and intermediate Python developers who are eager to get an idea of what lies beneath the surface of Python.
+> With this talk, I hope to pique your curiosity about the more advanced features of the Python programming language and hopefully give you a glimpse of all the things that are possible.
+
+- creating a method in a class actually creates a normal function and the class has an attribute (of the same name) that points to the function
+- an instance of the class gets a *bound method* as it's attribute
+    - the instance has already been inserted as the first parameter
+
+```python
+class Guitar:
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def play_note(self, note: str) -> None:
+        print(f"My {self.name} plays the note {note!r}.")
+```
+
+```python
+Guitar.play_note
+```
+
+    <function __main__.Guitar.play_note>
+
+```python
+warwick = Guitar("Warwick Streamer")
+warwick.play_note
+```
+
+    <bound method Guitar.play_note of <__main__.Guitar object at 0x7f403f26c190>>
+
+- descriptors:
+    - objects that modify what happens when we do something with an attribute
+        - customize lookup, assignment, and deletion of attributes
+    - implement the "Descriptor Protocol"
+        - `__get__` method customizes lookup: `warwick.play_note`
+            - automatically provided
+        - `__set__` method customies assignemnt: `warwick.play_note = "value"`
+        - `__delete__` method customizes deletion of an attr: `del warwick.play_note`
+    - below is an example of implementing a descriptor in the `Guitar` class that just tells if the instance is my favorite guitar, the Warwick Streamer
+        - only implements the dunder `__get__` method with three parameters:
+            - `self`: the `FavoriteDescriptor` instance
+            - `instance`: the instance of some class that has the attribute (`warwick` in this example)
+                - if `None`, then the `FavoriteDescriptor` is returned (common practice in Python)
+            - `owner`: the class that owns the attribute
+
+```python
+class FavoriteDescriptor:
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        return instance.name == "Warwick Streamer"
+
+
+class Guitar:
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def play_note(self, note: str) -> None:
+        print(f"My {self.name} plays the note {note!r}.")
+
+    is_my_favorite = FavoriteDescriptor()
+```
+
+```python
+Guitar.is_my_favorite
+```
+
+    <__main__.FavoriteDescriptor at 0x7f403f26d050>
+
+```python
+warwick = Guitar("Warwick Streamer")
+warwick.is_my_favorite
+```
+
+    True
+
+- now looking at the `__get__` method for `function` in Python
+
+```python
+class function:
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        return PyMethod(self, instance)
+```
+
+```python
+Guitar.play_note
+```
+
+    <function __main__.Guitar.play_note>
+
+```python
+Guitar.play_note.__get__(None, Guitar)
+```
+
+    <function __main__.Guitar.play_note>
+
+```python
+warwick.play_note
+```
+
+    <bound method Guitar.play_note of <__main__.Guitar object at 0x7f403f1b11d0>>
+
+```python
+warwick.play_note.__get__(None, Guitar)
+```
+
+    <bound method Guitar.play_note of <__main__.Guitar object at 0x7f403f1b11d0>>
+
+```python
+warwick.play_note.__get__(warwick, Guitar)  # what normally happens behind the scenes
+```
+
+    <bound method Guitar.play_note of <__main__.Guitar object at 0x7f403f1b11d0>>
+
+- other built-in descriptors (often used as decorators):
+    - `classmethod`: to bind the class, not the instance, to a function
+    - `staticmethod`: to return the function "as-is", not bound to a class nor function
+    - `property`: easily create getters/setters/deleters
 
 ```python
 
