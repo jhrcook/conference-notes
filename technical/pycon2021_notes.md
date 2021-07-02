@@ -42,7 +42,7 @@
 - [x] Protocol: the keystone of type hints
 - [ ] Static Sites with Sphinx and Markdown
 - [ ] The Road to Pattern Matching in Python
-- [ ] Using Declarative Configs for Maintainable Reproducible Code
+- [x] Using Declarative Configs for Maintainable Reproducible Code
 - [ ] Getting an Edge with Network Analysis with Python
 - [ ] Python Performance at Scale - Making Python Faster at Instagram
 - [ ] No, Maybe and Close Enough: Using Probabilistic Data Structures in Python
@@ -877,6 +877,53 @@ warwick.play_note.__get__(warwick, Guitar)  # what normally happens behind the s
     - `classmethod`: to bind the class, not the instance, to a function
     - `staticmethod`: to return the function "as-is", not bound to a class nor function
     - `property`: easily create getters/setters/deleters
+
+## Using Declarative Configs for Maintainable Reproducible Code
+
+⭐⭐⭐⭐
+
+**Jonathan Striebel** ([recording](https://youtu.be/omhJrT90lXU))
+
+> Wondering how to keep your application config from getting outdated?
+> Looking for a way to future-proof it in a backwards-compatible manner, keeping previous versions reproducible?
+> Join this talk, we’ll share how declarative configs can be leveraged to make your code maintainable and reproducible at the same time.
+>
+> Therefore, an overview across the application config landscape is given – from inputs as cli-args, env-vars, and config-files, to their representations in code, covering serialization & deserialization, type-safety with config-schemas and evolutions.
+> We’ll recommend cherries to pick for a maintainable and expressive declarative config system.
+
+- maintainability and reproducibility
+    1. separatation of config and code
+    2. config verification - make sure the config only uses available options
+    3. code verification - make sure the code uses the connfig correctly
+    4. automated migrations
+- keep config declarative
+    - data only
+    - no logic branches (e.g. if-statements)
+    - let the Python code by imperative and driven by the config
+- input formats:
+    - command line arguments (gets tricky with many configurations)
+    - environment variables
+    - YAML, JSON, TOML, INI
+        - read into Python as a class
+        - use the `attr.s(auto_attribs=True)` to automatically generate the `__init__()` and some other methods
+        - use the 'cattrs' library for converting the deserialzed YAML file into the `ConfigSchema` object
+        - 'pydantic' is also a good option instead of 'attrs' and 'cattrs'
+        - use a type checker to validate
+
+```python
+import attr
+from pathlib import Path
+
+@attr.s(auto_attribs=True)
+class ConfigSchema:
+    path: Path
+    threshold: int
+    plot_x: str
+    plot_y: str
+```
+
+- include version numbers for creating automatic migrations as the configuration evolves
+    - each time the configuration changes, create a new function that updates the previour version to the new one
 
 ```python
 
