@@ -19,8 +19,8 @@
 - [ ] Add rich graphics to your SwiftUI app
 - [x] Direct and reflect focus in SwiftUI
 - [ ] Discover concurrency in SwiftUI
-- [ ] SwiftUI on the Mac: Build the fundamentals
-- [ ] SwiftUI on the Mac: The finishing touches
+- [x] SwiftUI on the Mac: Build the fundamentals
+- [x] SwiftUI on the Mac: The finishing touches
 - [ ] Swift concurrency: Update a sample app
 - [ ] Swift concurrency: Behind the scenes
 - [ ] Use the camera for keyboard input in your app
@@ -972,6 +972,72 @@ HStack {
         BrowsePhotosButton()
     }
     .focusSection() // Allows this entire VStack to be focusable.
+}
+```
+
+## SwiftUI on the Mac: Build the fundamentals
+
+[Recording](https://wwdc.io/share/wwdc21/10062)
+
+> Code along with us as we use SwiftUI to build a Mac app from start to finish.
+> Discover four principles all great Mac apps have in common, and learn how to apply those principles in practice using SwiftUI.
+> We’ll show you how to create a powerful, flexible sidebar experience and transform lists to tables within a detail view, then discuss best best practices for data organization.
+> Next, we’ll explore the simple .searchable modifier and find out how to add support for the toolbar and search.
+> And to close out part one, we’ll learn how to build a great multiple-window experience and provide menu bar support.
+>
+> This is the first session in a two-part Code-Along series.
+> To get the most out of this series, we recommend that you have some basic familiarity with SwiftUI.
+> For more background, watch "Introduction to SwiftUI" from WWDC20.
+
+- this code-along demonstrates the following technology:
+    - sidebar creation in a `NavigationView`
+    - `@SceneStorage` property wrapper for storing state across opening and quitting an app
+    - `DisclosureGroup` for optionally showing sub-menus
+    - `.badge` modifier to `Label` views
+    - `Table` views to show tabular data in columns and rows
+        - how to add sorting options
+    - add buttons to the toolbar
+        - including a `DisplayMode` button (e.g. for table vs. list vs. collection of images, etc.)
+    - `.searchable` modifier
+    - adding commands to the menu and keyboard shortcuts
+        - use `FocusedBinding` property wrapper to get bindings from currently used window
+
+## SwiftUI on the Mac: The finishing touches
+
+[Recording](https://wwdc.io/share/wwdc21/10289)
+
+> Join us for part two of our Code-Along series as we use SwiftUI to build a Mac app from start to finish.
+> The journey continues as we explore how our sample gardening app can adapt to a person’s preferences and specific workflows.
+> Learn how SwiftUI apps can automatically react to system settings, and discover how you can use that information to add more personality to an app.
+> We’ll show you how you can give people the flexibility to customize an app through Settings, and explore how to use different workflows for manipulating someone’s data (like drag and drop).
+> To finish, we’ll show you how you can move data to and from an app, incorporating features like Continuity Camera to provide a simple workflow for importing images.
+>
+> This is the second session in a two-part Code-Along series.
+> To get the most out of this session, we recommend first watching “SwiftUI on the Mac: Build the fundamentals.”
+> And for more background on working with these frameworks, watch Introduction to SwiftUI from WWDC20.
+
+- this code-along demonstrates the following technology:
+    - how to add a custom AccentColor for the app
+    - add and customize a `Settings` scene with a `TabView` with multiple children views
+        - `@AppStorage` property wrapper to persist data using `UserDefaults`
+        - including a `.tag()` modifier for the selection in a `Picker`
+    - create a `Binding` with a `get` and `set` closure (demonstrated below)
+    - enable drag-and-drop support in a `Table`
+        - enable dragging a row by building the `Table` using a "row-builder" with the `row:` parameter instead of initializing the `Table` with a collection
+        - enable drop by adding a `.onInsert` modifier to the `ForEach` in the row-builder closure
+    - how to let the user export data
+        - add the command to the Menu where the "Export..." command usually goes
+        - open the file exporting menu and provide the data as a "document"
+    - how to import data from another device (brief on details, but can look at source code for help)
+
+```swift
+@SceneStorage("selection") private var selectedGardenID: Garden.ID?
+@AppStorage("defaultGarden") private var defaultGardenID: Garden.ID?
+
+// Get the selected garden if available, else check if there is a default garden.
+// On change, only set the scene's `selectedGardenID`, not the app's global default.
+private var selection: Binding<Garden.ID?> {
+    Binding(get: { seletedGardenID ?? defaultGardenID  }, set: { selectedGardenID = $0  })
 }
 ```
 
