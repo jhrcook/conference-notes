@@ -925,6 +925,43 @@ class ConfigSchema:
 - include version numbers for creating automatic migrations as the configuration evolves
     - each time the configuration changes, create a new function that updates the previour version to the new one
 
+## Large Scale Data Validation (with Spark and Dask)
+
+⭐⭐⭐
+
+**Kevin Kho** ([recording](https://youtu.be/2AdvBgjO_3Q))
+
+> Data validation is checking if data follows certain requirements needed for data pipelines to run reliably.
+> It is used by data scientists and data engineers to preserve the integrity of existing workflows, especially as they get modified.
+> As an example, extreme machine learning predictions can be stopped from being displayed to application users if a new model is bad.
+> Missing data can be flagged if it has the potential to break downstream operations.
+>
+> As data volume continues to increase, we will examine how data validation differs between a single-machine setting and a distributed computing setting.
+> We will show what validations become more computationally expensive in Spark and Dask.
+> For large scale data, there is sometimes also a need to apply different validations on different partitions of data.
+> This is currently not feasible with any single library.
+> In this talk, we will show how we can achieve this by combining the strengths of different frameworks.
+>
+> To demonstrate the data validation journey, we'll go over a fictitious case study.
+> The data will start small, and we'll apply Pandas-based validations with ['Pandera'](https://pandera.readthedocs.io/en/stable/) and ['Great Expectations'](https://docs.greatexpectations.io/en/latest/intro.html) while discussing the pros and cons of each.
+> As data size increases, we'll go over in detail the pain-points of transitioning to a distributed setting.
+> We'll show one way to reuse the same Pandas-based validations on Spark and Dask by wrapping them with ['Fugue'](https://fugue.readthedocs.io/en/latest/introduction.html).
+
+- notes on ['Great Expectations'](https://docs.greatexpectations.io/en/latest/intro.html):
+    - works with 'Spark' and 'pandas'
+    - can automatically create a "data document" showing statistics and validations for a checked data set
+    - detailed outputs
+    - fancy notifications available (e.g. through Slack)
+    - CLI
+- notes on ['Pandera'](https://pandera.readthedocs.io/en/stable/):
+    - more light-weight than 'Great Expectations'
+    - only works on 'pandas'
+    - simple to add custom validators
+    - decorators to wrap functions functions with validation schemas
+- notes on ['Fugue'](https://fugue.readthedocs.io/en/latest/introduction.html):
+    - > It is a pure abstraction layer that adapts to different computing frameworks such as Spark and Dask. It is to unify the core concepts of distributed computing and to help you decouple your logic from specific computing frameworks.
+    - can use with 'pandera' to validate data in a scalable fashion
+
 ```python
 
 ```
