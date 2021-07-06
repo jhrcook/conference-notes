@@ -49,8 +49,9 @@
 - [x] The magic of "self": How Python inserts "self" into methods
 - [ ] What are quantum computers, and how can we train them in Python?
 - [x] Statistical Typing: A Runtime Typing System for Data Science and Machine Learning
-- [ ] Unexpected Execution: Wild Ways Code Execution can Occur in Python
-- [ ] Large Scale Data Validation (with Spark and Dask)
+- [x] Unexpected Execution: Wild Ways Code Execution can Occur in Python
+- [x] Large Scale Data Validation (with Spark and Dask)
+- [ ] Patterns of ML Models in Production
 
 ## Keynote - Imaging Rembrandt's *The Night Watch* at 5 µm Resolution with Python
 
@@ -961,6 +962,20 @@ class ConfigSchema:
 - notes on ['Fugue'](https://fugue.readthedocs.io/en/latest/introduction.html):
     - > It is a pure abstraction layer that adapts to different computing frameworks such as Spark and Dask. It is to unify the core concepts of distributed computing and to help you decouple your logic from specific computing frameworks.
     - can use with 'pandera' to validate data in a scalable fashion
+
+## Unexpected Execution: Wild Ways Code Execution can Occur in Python
+
+⭐⭐⭐⭐
+
+**Graham Bleaney, Ibrahim Mohamed** ([recording](https://youtu.be/R1KrPc1IOeE))
+
+> Every Python user knows that you can execute code using eval or exec, but what about `yaml` or `str.format`?
+> This talk will take you on a walk through all the weird and wild ways that you can achieve code execution on a Python server (and trust me, I didn’t spoil the surprise by putting the weirdest ones in the description).
+>
+> The talk should be equal parts practical and entertaining as we work through both real examples of code execution vulnerabilities found in running code as well as absurd remote code execution exploits.
+> The talk will end on a practical note by explaining how Facebook detects and prevents the exploit vectors we discussed, using an open source 'Python Static Analyzer' called ['Pysa'](https://engineering.fb.com/2020/08/07/security/pysa/).
+
+(Interesting, but I didn't take notes because it is not directly relevant to my current work.)
 
 ```python
 
