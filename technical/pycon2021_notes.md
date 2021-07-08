@@ -51,7 +51,7 @@
 - [x] Statistical Typing: A Runtime Typing System for Data Science and Machine Learning
 - [x] Unexpected Execution: Wild Ways Code Execution can Occur in Python
 - [x] Large Scale Data Validation (with Spark and Dask)
-- [ ] Patterns of ML Models in Production
+- [x] Patterns of ML Models in Production
 
 ## Keynote - Imaging Rembrandt's *The Night Watch* at 5 µm Resolution with Python
 
@@ -976,6 +976,47 @@ class ConfigSchema:
 > The talk will end on a practical note by explaining how Facebook detects and prevents the exploit vectors we discussed, using an open source 'Python Static Analyzer' called ['Pysa'](https://engineering.fb.com/2020/08/07/security/pysa/).
 
 (Interesting, but I didn't take notes because it is not directly relevant to my current work.)
+
+## Patterns of ML Models in Production
+
+⭐⭐⭐⭐
+
+**Simon Mo** ([recording](https://youtu.be/GJt89jCiPUQ))
+
+> You trained a ML model, now what?
+> The model needs to be deployed for online serving and offline processing.
+> This talk walks through the journey of deploying your ML models in production.
+> I will cover common deployment patterns backed by concrete use cases which are drawn from 100+ user interviews for [Ray](https://docs.ray.io/en/master/index.html) and [Ray Serve](https://docs.ray.io/en/master/serve/index.html).
+> Lastly, I will cover how we built Ray Serve, a scalable model serving framework, from these learnings.
+
+- architectual patterns:
+    - *batch*: model is run on a schedule by workflow management system on new batches of data
+    - *stream*: incomming events are constantly coming in and run through the model in small batches
+    - *serve*: models are served in real time, interactively
+        - superset of 'batch' and 'stream'
+- most common patterns of ML in production:
+    - *pipeline*
+        - multiple models process an input sequentially
+        - each step handles a different part of the problem solving process
+        - pros:
+            - separation of concerns
+            - each model can be updated separately
+        - cons:
+            - depedency of models makes deciding how to retrain models tricky
+            - difficult to parallelize and scale
+    - *ensemble*
+        - multiple versions of the model deployed
+        - aggregation of predictions from multiple models
+        - dynamic selection of certain models based on features of the data
+    - *business logic*
+        - every part of the app not directly invovled in inference
+            - e.g.: database lookup, data/feature prep and validation
+        - often requires a lot of network activity, making the server network-bound and I/O heavy
+            - the model inference is already compute-bound and memory hungry, making the overall server very expensive
+        - common to split into separate services, but now difficult to manage communication and keeping them in sync
+    - *online learning*
+        - the model in deployment is still being trained and validated
+        - tricky to do properly
 
 ```python
 
