@@ -1018,6 +1018,43 @@ class ConfigSchema:
         - the model in deployment is still being trained and validated
         - tricky to do properly
 
+## The Road to Pattern Matching in Python
+
+⭐⭐⭐
+
+**Tobias Kohn** ([recording](https://youtu.be/NYUXNRswe6k))
+
+> Pattern matching is a great and proven tool for programmers.
+> However, can we also assimilate and integrate it into Python?
+> This talk tries to give an answer and discusses the rationale and ideas behind the recent "pattern matching" PEPs.
+>
+> Processing structured data has sparked ever more powerful programming tools.
+> Python's objects and classes, for instance, have proven themselves to be particularly versatile and form part of the backbone of the language.
+> Constructing or building new objects — including built-ins such as lists, tuples or dictionaries — abounds in any Python code.
+> In contrast, testing the structure of data and extracting specific elements is often rather cumbersome, requiring the frequent use of built-in functions like `isinstance`, `len` and `getattr`.
+>
+> Pattern matching addresses this issue by introducing a new paradigm to de-construct data, complementing existing tools.
+> It can be thought of as an extension of Python's iterable unpacking to arbitrary objects.
+> However, it does so in a 'safe' way, ensuring that objects have the necessary structure to proceed with unpacking elements and attributes.
+>
+> The objective of this talk is to give you an overview of why pattern matching matters and what it really is.
+> You will gain a deeper understanding of the core concepts that make up pattern matching, as well as the design decisions and ideas behind the recent "pattern matching" PEPs.
+> However, this talk will not provide an introduction on how to use pattern matching in your code, nor is it about the intricacies of the implementation.
+> If you are a Python programmer, have heard of the new pattern matching features and are wondering what it is all about, then this talk is for you.
+
+- pieces of pattern matching:
+    - checks the structure/shape/type of the data
+    - selects code to handle a specific object
+    - extracts relevant pieces of information
+- meaning of pattern matching cases:
+    - simple names are binding targets
+    - attributes provide value constrains for the patterns
+    - binding targets must be determinisitic
+
+### Conclusion
+
+This was a very interesting talk about pattern matching in more general terms than just its implementation in Python.
+
 ```python
 
 ```
