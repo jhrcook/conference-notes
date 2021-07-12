@@ -1055,6 +1055,29 @@ class ConfigSchema:
 
 This was a very interesting talk about pattern matching in more general terms than just its implementation in Python.
 
+## What are quantum computers, and how can we train them in Python?
+
+⭐⭐
+
+**Josh Izaac** ([recording](https://youtu.be/o377m0doD6M))
+
+> Quantum computers aren’t what-ifs anymore — they are available now, and publicly accessible over the internet.
+> And Python is rapidly becoming the language of choice for accessing and programming quantum computers, with Python SDKs available from Google (Cirq), IBM (Qiskit), and others.
+> However, early quantum computers are small, noisy, and error prone. Simultaneously, it has never been easier to perform differentiable programming in Python; simply swap out NumPy for TensorFlow, PyTorch, or JAX, and you have the ability to differentiate and train the program itself.
+>
+> So what would happen if we attempted to combine the two?
+>
+> Using a mixture of real Python examples and illustrated diagrams, we show how to not only evaluate, but also differentiate small quantum programs directly on quantum hardware.
+> By extracting the gradients, we can integrate these quantum programs directly into larger differentiable programs in Python, and train/optimize the full (hybrid quantum-classical!) program.
+> Over the course of this talk, quantum-curious Python developers will see first-hand how quantum programming looks in Python, and get an idea of how (and when) it makes sense to take advantage of these novel hardware devices.
+
+- quantum computers:
+    - many ways to build a quantum computer
+        - currently use "near-term" quantum computers which are small and noisy
+    - take advatnage of quantum properties such as *entanglement* and *superposition*
+    - suggests thinking of near-term quantum devices as "black boxes" that perform matrix-multiplication very well
+        - extract classical data from this black box via measurement statistics
+
 ```python
 
 ```
