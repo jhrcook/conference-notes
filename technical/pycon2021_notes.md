@@ -41,13 +41,13 @@
 - [x] More Fun With Hardware and CircuitPython - IoT, Wearables, and more!
 - [x] Protocol: the keystone of type hints
 - [ ] Static Sites with Sphinx and Markdown
-- [ ] The Road to Pattern Matching in Python
+- [x] The Road to Pattern Matching in Python
 - [x] Using Declarative Configs for Maintainable Reproducible Code
-- [ ] Getting an Edge with Network Analysis with Python
+- [x] Getting an Edge with Network Analysis with Python
 - [ ] Python Performance at Scale - Making Python Faster at Instagram
 - [ ] No, Maybe and Close Enough: Using Probabilistic Data Structures in Python
 - [x] The magic of "self": How Python inserts "self" into methods
-- [ ] What are quantum computers, and how can we train them in Python?
+- [x] What are quantum computers, and how can we train them in Python?
 - [x] Statistical Typing: A Runtime Typing System for Data Science and Machine Learning
 - [x] Unexpected Execution: Wild Ways Code Execution can Occur in Python
 - [x] Large Scale Data Validation (with Spark and Dask)
@@ -1077,6 +1077,19 @@ This was a very interesting talk about pattern matching in more general terms th
     - take advatnage of quantum properties such as *entanglement* and *superposition*
     - suggests thinking of near-term quantum devices as "black boxes" that perform matrix-multiplication very well
         - extract classical data from this black box via measurement statistics
+
+## Getting an Edge with Network Analysis with Python
+
+⭐⭐⭐⭐
+
+**Alon Nir** ([recording](https://youtu.be/DPqhV21tSAc))
+
+> Networks are all around us. While Facebook and Twitter are the obvious examples, every time we shake hands, drive from point A to B, push code to github, check out a meetup or rate a show on IMDB, we’re participating in network activity.
+> People, places, things and even ideas are inter-connected in innumerable networks, and these can have a great (yet sometimes inconspicuous) impact on our lives.
+>
+> The purpose of this talk is to introduce members of the audience to network analysis and its importance, and give them the basic building blocks for applied network analysis with Python.
+
+This was a simple introduction to network analysis with ['networkx'](https://networkx.org) library.
 
 ```python
 
