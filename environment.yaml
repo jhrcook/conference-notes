@@ -1,0 +1,38 @@
+name: conference-notes
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.10
+  - black
+  - isort
+  - jupyterlab
+  - jupyterlab_code_formatter
+  - jupyterlab-spellchecker
+  - mamba
+  - matplotlib
+  - mypy
+  - nbconvert
+  - nbformat
+  - nbqa
+  - numpy
+  - pandas
+  - pandoc
+  - pip
+  - plotnine
+  - pre-commit
+  - pretty_errors
+  - pydantic
+  - pyjanitor
+  - requests
+  - rich
+  - scikit-learn
+  - scikit-misc
+  - scipy
+  - seaborn
+  - statsmodels
+  - types-pyyaml
+  - watermark
+  - pip:
+    - python-dotenv
