@@ -17,6 +17,7 @@ Wednesday, April 27, 2022 – Tuesday, May 3, 2022
 
 1. [Day 1](talks_005_day1.md) ([notebook](talks_005_day1.ipynb))
 1. [Day 2](talks_010_day2.md) ([notebook](talks_010_day2.ipynb))
+1. [Day 3](talks_015_day3.md) ([notebook](talks_015_day3.ipynb))
 
 ### Other talks to watch later:
 
