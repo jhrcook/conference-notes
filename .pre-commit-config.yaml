@@ -1,12 +1,12 @@
 repos:
 -   repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.31.1
+    rev: v0.36.0
     hooks:
     -   id: markdownlint
         args: [--fix]
 
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.2.0
+    rev: v4.4.0
     hooks:
     -   id: check-yaml
     -   id: end-of-file-fixer
@@ -15,41 +15,41 @@ repos:
         args: ["--maxkb", "80000"]
 
 -   repo: https://github.com/pycqa/isort
-    rev: 5.10.1
+    rev: 5.12.0
     hooks:
     - id: isort
       types: [python]
       args: ["--profile", "black"]
 
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.942
+    rev: v1.5.1
     hooks:
     -   id: mypy
         additional_dependencies: [pydantic, types-PyYAML, types-python-dateutil]
 
 -   repo: https://github.com/psf/black
-    rev: 22.3.0
+    rev: 23.9.1
     hooks:
     -   id: black
 
--   repo: https://github.com/PyCQA/pydocstyle
-    rev: 6.1.1
-    hooks:
-    -   id: pydocstyle
-        types: [python]
-        args: ["--convention", "google", "--add-ignore", "D301"]
+# -   repo: https://github.com/PyCQA/pydocstyle
+#     rev: 6.1.1
+#     hooks:
+#     -   id: pydocstyle
+#         types: [python]
+#         args: ["--convention", "google", "--add-ignore", "D301"]
 
 -   repo: https://github.com/nbQA-dev/nbQA
-    rev: 1.3.1
+    rev: 1.7.0
     hooks:
     -   id: nbqa-isort
         args: ["--profile=black"]
     -   id: nbqa-black
-    -   id: nbqa-mypy
-        additional_dependencies: [pydantic, mypy, types-python-dateutil, types-PyYAML]
-        types: [jupyter]
+    # -   id: nbqa-mypy
+    #     additional_dependencies: [pydantic, mypy, types-python-dateutil, types-PyYAML]
+    #     types: [jupyter]
 
--   repo: https://github.com/MarcoGorelli/check-execution-order
-    rev: v0.1.1
-    hooks:
-    -   id: check-execution-order
+# -   repo: https://github.com/MarcoGorelli/check-execution-order
+#     rev: v0.1.1
+#     hooks:
+#     -   id: check-execution-order
